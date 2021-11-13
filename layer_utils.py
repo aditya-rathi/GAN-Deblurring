@@ -48,7 +48,7 @@ def ResNet(input, filters, kernel_size=(3,3), stride=1, use_dropout=False):
         x = tfl.Dropout(0.4)(x) # Hyperparam
     
     x = ReflectionPadding2D((1,1))(x)
-    x = tfl.Conv2D(filtes=filters, kernel_size=kernel_size, strides=(stride,stride))(x)
+    x = tfl.Conv2D(filters, kernel_size=kernel_size, strides=(stride,stride))(x)
     x = tfl.BatchNormalization()(x)
     
     x = tfl.Add()([input, x]) # skip connection
