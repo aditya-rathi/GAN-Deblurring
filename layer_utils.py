@@ -40,7 +40,7 @@ def ResNet(input, filters, kernel_size=(3,3), stride=1, use_dropout=False):
     """
 
     x = ReflectionPadding2D((1,1))(input)
-    x = tfl.Conv2D(filtes=filters, kernel_size=kernel_size, strides=(stride,stride))(x)
+    x = tfl.Conv2D(filters, kernel_size=kernel_size, strides=(stride,stride))(x)
     x = tfl.BatchNormalization()(x)
     x = tfl.ReLU()(x)
 
