@@ -1,17 +1,18 @@
-from keras.layers import Input, Activation, Add
-from keras.layers.advanced_activations import LeakyReLU
-from keras.layers.convolutional import Conv2D, Conv2DTranspose
-from keras.layers.core import Lambda
-from keras.layers.normalization import BatchNormalization
-from keras.models import Model
+from tensorflow.keras.layers import Input, Activation, Add
+from tensorflow.keras.layers import LeakyReLU
+from tensorflow.keras.layers import Conv2D, Conv2DTranspose
+from tensorflow.keras.layers import Lambda
+from tensorflow.keras.layers import BatchNormalization
+from tensorflow.keras.models import Model
 
-from layer_utils import ReflectionPadding2D, res_block
+from layer_utils import ResNet, ReflectionPadding2D
 
 ngf = 64
 input_nc = 3
 output_nc = 3
 input_shape_generator = (256, 256, input_nc)
 n_blocks_gen = 9
+image_shape = (256, 256, 3)
 
 
 def generator_model():
@@ -35,7 +36,7 @@ def generator_model():
     # Apply 9 ResNet blocks
     mult = 2**n_downsampling
     for i in range(n_blocks_gen):
-        x = res_block(x, ngf*mult, use_dropout=True)
+        x = ResNet(x, filters=ngf*mult, use_dropout=True)
 
     # Decrease filter number to 3 (RGB)
     for i in range(n_downsampling):
@@ -52,5 +53,9 @@ def generator_model():
     outputs = Add()([x, inputs])
     outputs = Lambda(lambda z: z/2)(outputs)
 
-    model = Model(inputs
+    model = Model(inputs=inputs, outputs=outputs, name='Generator')
     return model
+
+if __name__ == "__main__":
+    gen = generator_model()
+    print(gen.summary()) #output (256,256,3) -> input to discriminator
