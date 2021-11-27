@@ -1,10 +1,10 @@
-import keras.backend as K
-from keras.applications.vgg16 import VGG16
-from keras.models import Model
+import tensorflow.keras.backend as K
+from tensorflow.keras.applications.vgg16 import VGG16
+from tensorflow.keras.models import Model
 import numpy as np
 
 # Note the image_shape must be multiple of patch_shape
-image_shape = (256, 256, 3)
+image_shape = (128, 128, 3)
 
 
 def l1_loss(y_true, y_pred):
