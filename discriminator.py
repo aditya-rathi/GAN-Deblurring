@@ -1,19 +1,17 @@
 import tensorflow as tf
-from tf.keras.layers import Input, Activation, Add, UpSampling2D
-from tf.keras.layers.advanced_activations import LeakyReLU
-from tf.keras.layers.convolution import Conv2D
-from keras.layers.core import Dense, Flatten, Lambda
-from keras.layers.normalization import BatchNormalization
-from keras.models import Model
-
-from .layer_utils import ReflectionPadding2D, ResNet
+from tensorflow.keras.layers import Input, Activation
+from tensorflow.keras.layers import LeakyReLU
+from tensorflow.keras.layers import Conv2D
+from tensorflow.keras.layers import Dense, Flatten
+from tensorflow.keras.layers import BatchNormalization
+from tensorflow.keras.models import Model
+from generator import generator_model
 
 # need to import generator functions
 
 channelRate = 64
 imgShape = (256, 256, 3)
 patchShape = (channelRate, channelRate, 3)
-
 
 ndf = 64
 outputNC = 3
@@ -56,7 +54,7 @@ def discriminator():
     x = Conv2D(filters = 1, kernel_size = kernel, strides = 1, 
                padding = 'same')(x)
     if (sigmoid): x = Activation('sigmoid')(x)
-
+    #print(x.shape) # -> (8, 8, 1)
     # convert into 1D array (single feature vector)
     x = Flatten()(x)
     # matrix-vector multiplication with specified activation function
@@ -67,6 +65,7 @@ def discriminator():
 
 
 def generatorDiscriminator(generator, discriminator):
+    # Multiple outputs
     inputs = Input(shape = imgShape)
     genImg = generator(inputs)
     outputs = discriminator(genImg)
@@ -75,6 +74,6 @@ def generatorDiscriminator(generator, discriminator):
 if __name__ == '__main__':
     # add generator function
     d = discriminator()
-    d.summary()
-    model = generatorDiscriminator(generator(), discriminator())
+    print(d.summary())
+    model = generatorDiscriminator(generator_model(), discriminator())
     model.summary()
